@@ -1,6 +1,15 @@
 //Importando userServices
-const { getAllusersService } = require('../services/user.services');
+const { getAllusersService, registerUserService } = require('../services/user.services');
 
+// Controlador para registrar un usuario nuevo
+const registerUser = async (req, res) => {
+  try {
+    const newUser = await registerUserService(req.body);
+    res.status(201).json({ newUser });
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+}
 // Controlador para obtener todos los usuarios
 const getAllUsers = async (req, res) => {
   try {
@@ -15,4 +24,5 @@ const getAllUsers = async (req, res) => {
 //Exportando controladores de usuarios
 module.exports = {
   getAllUsers,
+  registerUser
 };
