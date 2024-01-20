@@ -3,6 +3,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const { connection } = require('../db/connection');
+//Importando rutas
+const userRoutes = require('../routes/user.routes');
 
 // Middlewares
 dotenv.config(); //Nos permite trabajar con las variables de entorno
@@ -16,6 +18,9 @@ const port = process.env.PORT; //importando variable de entorno
 app.listen(port, () => {
   console.log(`Estamos escuchando el puerto ${port}`)
 });
+
+//definiendo rutas 
+app.use('/users', userRoutes);
 
 // Inicia la conexión a la base de datos
 connection();
