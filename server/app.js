@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const { connection } = require('../db/connection');
 //Importando rutas
 const userRoutes = require('../routes/user.routes');
+const productRoutes = require('../routes/product.routes')
 
 // Middlewares
 dotenv.config(); //Nos permite trabajar con las variables de entorno
@@ -21,6 +22,7 @@ app.listen(port, () => {
 
 //definiendo rutas 
 app.use('/users', userRoutes);
+app.use('/products', productRoutes);
 
 // Inicia la conexión a la base de datos
 connection();
