@@ -4,7 +4,7 @@ const multer = require('multer');
 // Configuramos el almacenamiento de los archivos utilizando diskStorage de Multer
 const save = multer.diskStorage({
   destination: (req,file,cb) => {
-    cb(null, './uploads') //indicamos en que directorio vamos a guardar la img
+    cb(null, './public/uploads') //indicamos en que directorio vamos a guardar la img
   },
   // Configuramos el nombre del archivo que se guardará
   filename: (req,file,cb) => { //incicamos el nombre de la extencion de ese archivo

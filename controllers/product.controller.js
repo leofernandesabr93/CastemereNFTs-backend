@@ -1,5 +1,5 @@
 //Importando productServices
-const { createProductsService } = require("../services/product.services");
+const { createProductsService, getProductsService } = require("../services/product.services");
 
 // controlador para crear nuevos productos
 const createProductController = async (req, res) => {
@@ -11,6 +11,17 @@ const createProductController = async (req, res) => {
   }
 };
 
+// Controlador para traer usuarios
+const getProducts = async (req, res) => {
+  try {
+    const info = await getProductsService(req.query);
+    res.status(200).json({ info });
+  } catch (error) {
+    res.status(500).json( error.message );
+  }
+};
+
 module.exports = {
   createProductController,
+  getProducts
 };
