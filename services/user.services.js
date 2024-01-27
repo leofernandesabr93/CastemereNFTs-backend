@@ -1,6 +1,7 @@
 // Importa los módulos necesarios
 const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 //Registrar Usuarios
 const registerUserService = async ({ userName, email, password, admin }) => {
@@ -16,6 +17,35 @@ const registerUserService = async ({ userName, email, password, admin }) => {
 	return newUser;
 };
 
+//Loguear Usuarios
+const loginUserService = async ({ email, password}) => {
+	//Definimos una variable auxiliar
+  let userFounded;
+	//Importamos variable de entorno
+  const secretKey = process.env.SECRET_KEY;
+	//Verificamos si el email ingresado existe y en caso de que si buscamos en nuestra base de datos
+  if (email) {
+    userFounded = await User.findOne({ email }).lean();
+  }
+	//En caso de que el email no exista devolvemos un error
+  if (!userFounded) throw new Error('Credenciales incorrectas. Por favor, inténtalo de nuevo.');
+	//Comparamos el password ingresado con el password del usuario encontrado
+  const passwordMatch = await bcrypt.compare(password, userFounded.password);
+	//En caso de no coincidir devolvemos un error
+  if (!passwordMatch) throw new Error('Credenciales incorrectas. Por favor, inténtalo de nuevo.');
+  // Eliminamos la propiedad 'password' del objeto 'userFounded' ya que no es buena practica devolverlo
+  delete userFounded.password;
+
+  const payload = {
+    userFounded,
+  }
+  const token = await jwt.sign(payload, secretKey, {
+    expiresIn: '10h'
+  });
+
+  return { token, userFounded }
+};
+
 //Servicio para obtener todos los usuarios
 const getAllusersService = async () => {
   const users = await User.find() //Usamos el metodo find para buscar en el modelo de usuarios 
@@ -25,5 +55,6 @@ const getAllusersService = async () => {
 
 module.exports = {
 	getAllusersService,
-  registerUserService
+  registerUserService,
+	loginUserService
 }
