@@ -23,6 +23,7 @@ app.listen(port, () => {
 //definiendo rutas 
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
+app.use(express.static('public'))
 
 // Inicia la conexión a la base de datos
 connection();
