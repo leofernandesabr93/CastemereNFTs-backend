@@ -25,7 +25,7 @@ const loginUserService = async ({ email, password}) => {
   const secretKey = process.env.SECRET_KEY;
 	//Verificamos si el email ingresado existe y en caso de que si buscamos en nuestra base de datos
   if (email) {
-    userFounded = await User.findOne({ email }).lean();
+    userFounded = await User.findOne({ email }).lean()
   }
 	//En caso de que el email no exista devolvemos un error
   if (!userFounded) throw new Error('Credenciales incorrectas. Por favor, inténtalo de nuevo.');

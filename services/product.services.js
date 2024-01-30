@@ -1,5 +1,6 @@
 // Importa los módulos necesarios
 const Product = require('../models/product.model');
+const User = require('../models/user.model');
 
 // Servicio para crear nuevos productos
 const createProductsService = async ({ name, price }, filename) => {
@@ -39,7 +40,24 @@ const getProductsService = async ({ name, page }) => {
   };
 };
 
+// Servicio para marcar como favoritos un producto
+const markAsFavoriteService = async ({userId, productId}) => {
+  // Comprobamos si el id del usuario y del producto es correcto
+  const user =  await User.findById(userId)
+  if (!user) throw new Error("Usuario no existente");
+  const product =  await Product.findById(productId)
+  if (!product) throw new Error("Producto no existente");
+
+  user.favorite.push(product)
+  await user.save()
+
+  return {
+    user
+  };
+}
+
 module.exports = {
   createProductsService,
-  getProductsService
+  getProductsService,
+  markAsFavoriteService
 }
