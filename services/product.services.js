@@ -11,13 +11,16 @@ const createProductsService = async ({ name, price }, filename) => {
 	return newProduct;
 }
 
-const getProductsService = async ({ name, page }) => {
+const getProductsService = async ({ name, page, _id }) => {
   // Se convierte el número de página a un entero, o se establece en 1 si no se proporciona ningún número de página.
   const pagination = parseInt(page) || 1;
   const perPage = 20; // Número de productos por página
 
   let query = {}; // Objeto para almacenar los filtros de búsqueda
   // Si se proporciona un nombre, se crea una expresión regular insensible a mayúsculas y minúsculas para buscar productos que coincidan
+  if (_id) {
+    query._id = _id
+  }
   if (name) {
     query.name = { $regex: new RegExp(name, 'i') };
   }
@@ -56,8 +59,16 @@ const markAsFavoriteService = async ({userId, productId}) => {
   };
 }
 
+//Eliminar usuario
+const deleteProductService = async (productId) => {
+  const productRemoved = await Product.findByIdAndDelete(productId)
+  if(!productRemoved) throw new Error('no se pudo eliminar el producto')
+  return productRemoved;
+}
+
 module.exports = {
   createProductsService,
   getProductsService,
-  markAsFavoriteService
+  markAsFavoriteService,
+  deleteProductService
 }

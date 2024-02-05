@@ -1,5 +1,5 @@
 //Importando productServices
-const { createProductsService, getProductsService, markAsFavoriteService } = require("../services/product.services");
+const { createProductsService, getProductsService, markAsFavoriteService, deleteProductService } = require("../services/product.services");
 
 // controlador para crear nuevos productos
 const createProductController = async (req, res) => {
@@ -31,8 +31,19 @@ const markAsFavorite = async (req, res) => {
   }
 };
 
+const deleteProduct = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const products = await deleteProductService(productId);
+    res.status(200).json({message: "producto eliminado con exito",products});
+  } catch (error) {
+    res.status(500).json( error.message );
+  }
+}
+
 module.exports = {
   createProductController,
   getProducts,
-  markAsFavorite
+  markAsFavorite,
+  deleteProduct
 };

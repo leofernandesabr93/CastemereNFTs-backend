@@ -1,6 +1,6 @@
 // Importar modulos necesarios
 const express = require('express');
-const { createProductController, getProducts, markAsFavorite } = require('../controllers/product.controller');
+const { createProductController, getProducts, markAsFavorite, deleteProduct } = require('../controllers/product.controller');
 const { subirImagen } = require('../middlewares/storage');
 const route = express();
 
@@ -10,5 +10,7 @@ route.post('/newProduct', subirImagen.single('image'), createProductController)
 route.get('/', getProducts);
 // Ruta para marcar como favoritos
 route.post('/favorite', markAsFavorite);
+
+route.delete('/:productId', deleteProduct); 
 
 module.exports = route;
