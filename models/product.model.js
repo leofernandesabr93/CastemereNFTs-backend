@@ -12,6 +12,10 @@ const productSchema = new Schema({
   image: {
     type: String,  //La imagen va a ser de tipo string ya que va a guardar una ruta
     required: true
+  },
+  destacado: {
+    type: Boolean,
+    default: false
   }
 });
 

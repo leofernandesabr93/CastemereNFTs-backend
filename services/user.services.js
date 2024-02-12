@@ -1,7 +1,6 @@
 // Importa los módulos necesarios
 const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
 //Registrar Usuarios
 const registerUserService = async ({ userName, email, password, admin }) => {
@@ -36,18 +35,37 @@ const loginUserService = async ({ email, password}) => {
   // Eliminamos la propiedad 'password' del objeto 'userFounded' ya que no es buena practica devolverlo
   delete userFounded.password;
 
-  const payload = {
-    userFounded,
-  }
-  const token = await jwt.sign(payload, secretKey, {
-    expiresIn: '10h'
-  });
-
-  return { token, userFounded }
+  return { userFounded }
 };
 
+//Eliminar de favoritos
+const deleteProductService = async (userId, productId) => {
+  const user = await User.findById(userId)
+  if (!user) throw new Error("El usuario no fue encontrado");
+  // Filtra la matriz "favorite" para eliminar el ID del producto
+  user.favorite = user.favorite.filter(id => id.toString() !== productId);
+  // Guarda los cambios en la base de datos
+  await user.save();
+  return "Producto eliminado de favoritos correctamente";
+}
+
+//Eliminar de carrito
+const deleteCartService = async (userId, productId) => {
+  console.log(userId)
+  console.log(`PRODUCT ID:${productId}`)
+  const user = await User.findById(userId)
+  if (!user) throw new Error("El usuario no fue encontrado");
+  // Filtra la matriz "favorite" para eliminar el ID del producto
+  user.cart = user.cart.filter(id => id.toString() !== productId);
+  // Guarda los cambios en la base de datos
+  await user.save();
+  return "Producto eliminado de favoritos correctamente";
+}
 
 module.exports = {
   registerUserService,
-	loginUserService
+	loginUserService,
+  deleteProductService,
+  deleteProductService,
+  deleteCartService
 }
