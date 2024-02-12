@@ -25,6 +25,12 @@ const userSchema = new Schema({
       ref: "products",
     },
   ],
+  cart: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "products",
+    },
+  ],
 });
 //Importamos y guardamos el modelo en nuestra base de datos como "users"
 module.exports = model("users", userSchema); 

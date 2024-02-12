@@ -3,9 +3,9 @@ const Product = require('../models/product.model');
 const User = require('../models/user.model');
 
 // Servicio para crear nuevos productos
-const createProductsService = async ({ name, price }, filename) => {
+const createProductsService = async ({ name, price, destacado }, filename) => {
   // Crea un nuevo objeto Product con los datos proporcionados
-  const newProduct = await Product.create({ name, price, image:'/uploads/'+filename  });
+  const newProduct = await Product.create({ name, price, destacado, image:'/uploads/'+filename  });
   // Verificar si la creación del producto fue exitosa
 	if (!newProduct) throw new Error('Hubo un error al crear el nuevo Product');
 	return newProduct;
@@ -14,7 +14,7 @@ const createProductsService = async ({ name, price }, filename) => {
 const getProductsService = async ({ name, page, _id }) => {
   // Se convierte el número de página a un entero, o se establece en 1 si no se proporciona ningún número de página.
   const pagination = parseInt(page) || 1;
-  const perPage = 20; // Número de productos por página
+  const perPage = 12; // Número de productos por página
 
   let query = {}; // Objeto para almacenar los filtros de búsqueda
   // Si se proporciona un nombre, se crea una expresión regular insensible a mayúsculas y minúsculas para buscar productos que coincidan
@@ -46,16 +46,16 @@ const getProductsService = async ({ name, page, _id }) => {
 // Servicio para marcar como favoritos un producto
 const markAsFavoriteService = async ({userId, productId}) => {
   // Comprobamos si el id del usuario y del producto es correcto
-  const user =  await User.findById(userId)
-  if (!user) throw new Error("Usuario no existente");
+  const userFounded =  await User.findById(userId)
+  if (!userFounded) throw new Error("Usuario no existente");
   const product =  await Product.findById(productId)
   if (!product) throw new Error("Producto no existente");
 
-  user.favorite.push(product)
-  await user.save()
+  userFounded.favorite.push(product)
+  await userFounded.save()
 
   return {
-    user
+    userFounded
   };
 }
 
@@ -66,9 +66,25 @@ const deleteProductService = async (productId) => {
   return productRemoved;
 }
 
+// Servicio para agregar al carrito
+const addCartService = async ({userId, productId}) => {
+  const userFounded =  await User.findById(userId)
+  if (!userFounded) throw new Error("Usuario no existente");
+  const product =  await Product.findById(productId)
+  if (!product) throw new Error("Producto no existente");
+  userFounded.cart.push(product)
+  await userFounded.save()
+
+  return {
+    userFounded
+  };
+}
+
+
 module.exports = {
   createProductsService,
   getProductsService,
   markAsFavoriteService,
-  deleteProductService
+  deleteProductService,
+  addCartService
 }
